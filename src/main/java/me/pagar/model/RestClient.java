@@ -12,6 +12,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.UriBuilder;
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -56,8 +58,8 @@ public class RestClient {
 
         int sysMajorVersion = RestClient.getJavaVersion();
 
-        if (sysMajorVersion < 6 || sysMajorVersion > 8) {
-            throw new PagarMeException("Your installed Java version should be >= 6 and <= 8");
+        if (sysMajorVersion < 6 || sysMajorVersion > 11) {
+            throw new PagarMeException("Your installed Java version should be >= 6 and <= 11");
         }
 
         if (sysMajorVersion == 6) {
@@ -121,10 +123,12 @@ public class RestClient {
 
                 }
 
+                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("192.168.122.121", 3128));
+
                 httpClient = (HttpsURLConnection) builder
                         .build(this)
                         .toURL()
-                        .openConnection();
+                        .openConnection(proxy);
                 httpClient.setRequestMethod(this.method.toUpperCase());
                 httpClient.setDoInput(true);
                 httpClient.setDoOutput(false);

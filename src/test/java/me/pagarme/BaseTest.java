@@ -31,11 +31,7 @@ public abstract class BaseTest {
     protected static Boolean TRANSFER_ENABLE = true;
 
     public void setUp() {
-        transaction = new Transaction();
-
-        PagarMe.init("test_key");
-        String apiKey = new CompaniesTemporary().getTemporaryCompanyApiKey("2013-03-01");
-        PagarMe.init(apiKey);
+        setUp("2013-03-01");
     }
 
     public void setUp(String apiVersion) {

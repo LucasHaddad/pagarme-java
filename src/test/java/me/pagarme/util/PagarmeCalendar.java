@@ -1,5 +1,7 @@
 package me.pagarme.util;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,10 +21,11 @@ public class PagarmeCalendar {
 
     private static JSONArray getPagarmeOfficialHolidayCalendar(Integer year) throws Exception {
         URL holidayCalendarURL = new URL(HOLIDAY_CALENDAR_PATH + year + ".json");
-        HttpsURLConnection connection = (HttpsURLConnection) holidayCalendarURL.openConnection();
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("192.168.122.121", 3128));
+        HttpsURLConnection connection = (HttpsURLConnection) holidayCalendarURL.openConnection(proxy);
         
         String version = System.getProperty("java.version");
-        int sysMajorVersion = Integer.parseInt(String.valueOf(version.charAt(2)));
+        int sysMajorVersion = Integer.parseInt(version.contains(".") ? String.valueOf(version.charAt(2)) : version);
 
         if (sysMajorVersion == 6) {
             connection.setSSLSocketFactory(new TLSSocketConnectionFactory());
